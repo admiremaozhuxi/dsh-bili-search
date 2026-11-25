@@ -262,7 +262,7 @@ window.__ModuleLoader__.load({
             h(Num, { value: draft.minPlay, min: lim('minPlay').min, max: lim('minPlay').max, onChange: (v) => set('minPlay', v) })),
           h(Row, null,
             h('div', { 'data-bf-label': '' }, '候选清单数量（list 阶段给模型筛的条数）'),
-            h(Num, { value: draft.candidateLimit === undefined ? 200 : draft.candidateLimit, min: lim('candidateLimit').min, max: lim('candidateLimit').max, onChange: (v) => set('candidateLimit', v) })),
+            h(Num, { value: draft.candidateLimit === undefined ? 150 : draft.candidateLimit, min: lim('candidateLimit').min, max: lim('candidateLimit').max, onChange: (v) => set('candidateLimit', v) })),
           h(Row, null,
             h('div', { 'data-bf-label': '' }, '排序（默认只用综合，勾越多请求越多）'),
             h('div', { 'data-bf-orders': '' },
