@@ -364,7 +364,29 @@ window.__ModuleLoader__.load({
               disabled: busy === 'cooldown',
               onClick: () => act('cooldown', '/clear-cooldown', '清除冷却'),
             }, '立即清除冷却'),
-            h('div', { 'data-bf-note': '' }, state ? '当前剩余冷却：' + state.cooldownMinutes + ' 分钟 · 本次已用调用：' + state.callsThisRun : ''))),
+            h('div', { 'data-bf-note': '' }, state ? '当前剩余冷却：' + state.cooldownMinutes + ' 分钟 · 本次已用调用：' + state.callsThisRun : '')),
+          h(Row, null,
+            h('div', { 'data-bf-label': '' }, '当前生效间隔'),
+            h('div', { 'data-bf-note': '' }, state && state.adaptive
+              ? '生效 ' + state.adaptive.effectiveGapMs + 'ms ＝ 设置 ' + (draft.gapMs || 0) + ' / 自适应学习 ' + (state.adaptive.gapMs || 0) + 'ms'
+              : '—'),
+            h('button', {
+              'data-bf-btn': '',
+              disabled: busy === 'adaptive',
+              onClick: () => act('adaptive', '/reset-adaptive', '重置自适应间隔'),
+            }, '重置学习值')),
+          h(Row, null,
+            h('div', { 'data-bf-label': '' }, '静默期'),
+            h('div', { 'data-bf-note': '' }, state
+              ? (state.silenceSeconds > 0
+                ? '还剩 ' + state.silenceSeconds + ' 秒 —— 刚有别的工具打过 B 站，检索会先等再打'
+                : '无')
+              : '—'),
+            h('button', {
+              'data-bf-btn': '',
+              disabled: busy === 'silence',
+              onClick: () => act('silence', '/clear-silence', '清除静默期'),
+            }, '清除静默期'))),
 
         h('div', { 'data-bf-sec': '' },
           h('div', { 'data-bf-h': '' }, '账号与落盘'),

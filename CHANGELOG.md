@@ -16,6 +16,11 @@
   实际间隔取「设置值」与「学习值」里更慢的那个；`resetAdaptive()` 可回到设置值。
   设 `BILI_FILTER_NO_ADAPTIVE=1` 可整体关掉。
 
+- **设置页风控面板补全**：面板里直接显示「生效间隔（设置值 / 自适应学习值）」「静默期剩余秒数」「秒级冷却剩余」，
+  并新增「重置学习值」「清除静默期」两个按钮；`/state` 增加 `cooldownSeconds` `silenceSeconds` `adaptive` 三个字段，
+  新端点 `POST /clear-silence` `POST /reset-adaptive`。`/state` 读取时先同步一次运行时设置，
+  避免宿主刚起来时面板显示的间隔和设置页对不上。
+
 ### 修复
 
 - **部分失败保留**：取样中途命中风控，只要手上已有候选就带着 `stats.partial = true` 收工，

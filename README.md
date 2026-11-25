@@ -131,10 +131,12 @@ bili_filter(keyword="<同一条串>", stage="final", keep="BV1xxx,BV1yyy", stron
 自检路由（宿主 Web 端口上）：
 
 ```
-GET  /bili-filter-api/state            版本 / 传输方式 / 本轮调用数 / 冷却剩余 / 设置摘要
+GET  /bili-filter-api/state            版本 / 传输方式 / 本轮调用数 / 冷却剩余（分+秒）/ 静默期剩余 / 自适应间隔 / 设置摘要
 GET  /bili-filter-api/settings         设置 + 默认值 + 上下限
 POST /bili-filter-api/settings         改设置（逐项校验，越界 400）
 POST /bili-filter-api/clear-cooldown   立即清除风控冷却
+POST /bili-filter-api/clear-silence    立即清除静默期
+POST /bili-filter-api/reset-adaptive   重置自适应学习到的间隔（回到设置值）
 POST /bili-filter-api/refresh-wbi      刷新 wbi 签名
 POST /bili-filter-api/probe-login      检测登录态
 ```
@@ -147,6 +149,7 @@ POST /bili-filter-api/probe-login      检测登录态
 - **部分失败保留（0.5.4）**：手上已经取到候选时，中途某一页被拦不再整轮作废，而是带 `stats.partial = true` 收工，并顺手写 90 秒静默期——为一页 412 丢掉整轮候选比慢一点更亏。一条都没取到时照旧抛错，绝不拿空池子冒充「没结果」。
 - **静默期协议（0.5.4）**：探针类工具（`bili_sources`、登录检测、批量详情）打完 B 站应该调 `markSilence(ms, reason)` 写一段静默期，搜索端点在静默期内会先等再打。两个工具各管各的预算、却共用一个出口 IP，是「一上来就被判拦截页」最常见的原因。
 - **多检索词不再摊薄成 1 页（0.5.4）**：给 2 条以上变体时每个变体保底 2 页（原来 4 个词会被摊成各 1 页，召回比单词 3 页还差）；单变体仍然严格尊重 `pagesPerOrder`。
+- **设置页「风控与探测」可直接看和操作**（0.5.4）：当前生效间隔（设置值 / 自适应学习值）、静默期剩余秒数、冷却剩余、本次已用调用数，旁边配「重置学习值」「清除静默期」「清除冷却」三个按钮——不用再靠猜或翻日志判断现在是不是被限速。
 - 只读：不点赞、不评论、不投币、不改任何账号状态。
 - 账号只走本机 cookie，插件不保存 cookie 内容，只保存路径。
 
